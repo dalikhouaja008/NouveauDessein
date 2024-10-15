@@ -1,32 +1,23 @@
 package com.example.nouveaudesseinapp
 
-import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
-import android.widget.ImageView
+import android.os.Build
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -36,36 +27,43 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat.startActivityForResult
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaFontFamily
 import com.example.nouveaudesseinapp.ui.theme.components.CButton
 import com.example.nouveaudesseinapp.ui.theme.components.CTextfield
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormScreen(
-modifier: Modifier = Modifier
+    modifier: Modifier = Modifier
 ) {
-    var imageUri = remember { mutableStateOf<Uri?>(null) }
-    val context = LocalContext
-    var bitmap = remember { mutableStateOf<Bitmap?>(null) }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current // Correctly retrieve the current context.
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
 
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        imageUri = uri // Set the selected image URI
 
+        // Decode the image based on Android version.
+        uri?.let {
+            if (Build.VERSION.SDK_INT < 28) {
+                bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+            } else {
+                val source = ImageDecoder.createSource(context.contentResolver, it)
+                bitmap = ImageDecoder.decodeBitmap(source)
+            }
+        }
+    }
 
-
-
-
-
-    Box(modifier = modifier.fillMaxSize())
-    {
-       Image(
+    Box(modifier = modifier.fillMaxSize()) {
+        Image(
             painter = painterResource(id = R.drawable.background),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
-
         )
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
@@ -75,12 +73,9 @@ modifier: Modifier = Modifier
                 painter = painterResource(id = R.drawable.logo_blanc),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .padding(top = 54.dp)
-                    .height(100.dp)
-                    .align(Alignment.Start)
-                    .offset(x = (-20).dp)
+                modifier = Modifier.padding(top = 54.dp).height(100.dp).align(Alignment.Start).offset(x = (-20).dp)
             )
+
             Text(
                 text = "Poster votre contribution",
                 style = TextStyle(
@@ -92,6 +87,7 @@ modifier: Modifier = Modifier
                 ),
                 modifier = Modifier.align(Alignment.Start).padding(bottom = 24.dp)
             )
+
             Text(
                 text = "Poster maintenant pour avoir une réduction d'impôt",
                 style = TextStyle(
@@ -103,25 +99,35 @@ modifier: Modifier = Modifier
                 ),
                 modifier = Modifier.align(Alignment.Start).padding(bottom = 24.dp)
             )
-            CTextfield(hint = "Description ...",value="")
-            CTextfield(hint = "Adresse ...",value="")
+
+            CTextfield(hint = "Description ...", value="")
+            CTextfield(hint = "Adresse ...", value="")
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween, // Adjust as needed
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
             ) {
-                // Placeholder for the uploaded image
-                Image(
-                    painter = painterResource(id = R.drawable.upload), // Replace with actual image resource or state variable
-                    contentDescription = "Uploaded Image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(RoundedCornerShape(8.dp)) // Optional: Add rounded corners
-                )
+                // Display selected image if available or a placeholder.
+                bitmap?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = "Uploaded Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.size(50.dp).clip(RoundedCornerShape(8.dp))
+                    )
+                } ?: run {
+                    // Placeholder for the uploaded image if none is selected.
+                    Image(
+                        painter = painterResource(id = R.drawable.upload), // Placeholder image resource.
+                        contentDescription = "Upload Placeholder",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.size(50.dp).clip(RoundedCornerShape(8.dp))
+                    )
+                }
 
-                // Button to upload an image
-                CButton(onClick = { }, text = "Upload image")
+                // Button to upload an image.
+                CButton(onClick = { launcher.launch("image/*") }, text = "Upload Image")
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -141,17 +147,14 @@ modifier: Modifier = Modifier
                 // Button to upload an image
                 CButton(onClick = { }, text = "Upload facture")
             }
-            CButton(onClick = {}, text = "Envoyer")
 
+            CButton(onClick = {}, text = "Envoyer")
         }
     }
-
 }
 
-
-
-@Preview(showBackground = true, widthDp= 320,heightDp= 640)
+@Preview(showBackground = true)
 @Composable
-fun FormScreenPreview(){
+fun PreviewFormScreen() {
     FormScreen()
 }
