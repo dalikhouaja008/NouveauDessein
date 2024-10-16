@@ -43,7 +43,8 @@ fun LoginScreen(
     ) {
 
 
-        Box(modifier =  Modifier.fillMaxSize()){
+        Box(modifier =  Modifier
+            .fillMaxSize()){
             /// Background Image
             Image(painter = painterResource(id = R.drawable.bg),
                 contentDescription = null,
@@ -67,7 +68,7 @@ fun LoginScreen(
                 Image(painter = painterResource(id = R.drawable.logo_nouveau_dessein),
                     contentDescription = null,
                     modifier = Modifier
-                        .padding(top = 54.dp)
+                        .padding(top = 1.dp)
                         .height(100.dp)
                         .align(Alignment.Start)
                         .offset(x = (-20).dp)
@@ -82,6 +83,25 @@ fun LoginScreen(
                     ),
                     modifier = Modifier.align(Alignment.Start)
                 )
+                Text(text = "",
+                    style = TextStyle(
+                        fontSize = 28.sp,
+                        fontFamily = AlegreyaFontFamily,
+                        fontWeight = FontWeight(500),
+                        color = Color.White
+                    ),
+                    modifier = Modifier.align(Alignment.Start)
+                )
+                Text(text = "",
+                    style = TextStyle(
+                        fontSize = 28.sp,
+                        fontFamily = AlegreyaFontFamily,
+                        fontWeight = FontWeight(500),
+                        color = Color.White
+                    ),
+                    modifier = Modifier.align(Alignment.Start)
+                )
+
 
 
 
