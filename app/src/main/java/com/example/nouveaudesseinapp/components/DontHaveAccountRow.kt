@@ -20,7 +20,7 @@ fun DontHaveAccountRow(
     Row(
         modifier = Modifier.padding(top=12.dp, bottom = 52.dp)
     ){
-        Text("Don't have an account? ",
+        Text("Avez vous déjà un compte? ",
             style = TextStyle(
                 fontSize = 18.sp,
                 fontFamily = AlegreyaSansFontFamily,

@@ -2,6 +2,7 @@ package com.example.nouveaudesseinapp
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,6 +60,7 @@ fun SignupScreen(
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp)
@@ -73,6 +75,32 @@ fun SignupScreen(
                         .align(Alignment.Start)
                         .offset(x = (-20).dp)
                 )
+                Row(
+                    modifier = Modifier.padding(top=12.dp, bottom = 52.dp),
+                ){
+
+                    Text("Avez vous déjà un compte? ",
+                        style = TextStyle(
+                            fontSize = 15.sp,
+                            fontFamily = AlegreyaSansFontFamily,
+                            color = Color.White
+                        )
+                    )
+
+                    Text("Se connecter",
+                        style = TextStyle(
+                            fontSize = 15.sp,
+                            fontFamily = AlegreyaSansFontFamily,
+                            fontWeight = FontWeight(800),
+                            color = Color.White
+                        ),
+                        modifier = Modifier.clickable {
+                            navController.navigate("signin")
+                        }
+                    )
+
+
+                }
 
                 Text(text = "Créer un compte",
                     style = TextStyle(
@@ -109,31 +137,6 @@ fun SignupScreen(
                     .width(20.dp))
             }
 
-                Row(
-                    modifier = Modifier.padding(top=12.dp, bottom = 52.dp)
-                ){
-                    Text("Avez vous déjà un compte? ",
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontFamily = AlegreyaSansFontFamily,
-                            color = Color.White
-                        )
-                    )
-
-                    Text("Se connecter",
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontFamily = AlegreyaSansFontFamily,
-                            fontWeight = FontWeight(800),
-                            color = Color.White
-                        ),
-                        modifier = Modifier.clickable {
-                            navController.navigate("login")
-                        }
-                    )
-
-
-                }
 
             }
 

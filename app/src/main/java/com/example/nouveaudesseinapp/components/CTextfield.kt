@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaSansFontFamily
@@ -22,19 +21,16 @@ fun CTextfield(
     onValueChange: (String) -> Unit = {},
     hint: String,
     value: String,
-)
-{
+) {
     TextField(
         value = value,
         onValueChange = onValueChange,
         placeholder = {
-            Text(
-                hint,
+            Text(text = hint,
                 style = TextStyle(
-                    fontSize = 15.sp,
+                    fontSize = 18.sp,
                     fontFamily = AlegreyaSansFontFamily,
-
-                    color = Color.White,
+                    color = Color(0xFFBEC2C2)
                 )
             )
         },
@@ -43,10 +39,9 @@ fun CTextfield(
             .padding(bottom = 8.dp),
         colors = TextFieldDefaults.textFieldColors(
             containerColor = Color.Transparent,
-            focusedIndicatorColor = Color.White,
-            unfocusedIndicatorColor = Color.White,
+            focusedIndicatorColor = Color(0xFFBEC2C2),
+            unfocusedIndicatorColor = Color(0xFFBEC2C2)
         )
-
 
     )
 }

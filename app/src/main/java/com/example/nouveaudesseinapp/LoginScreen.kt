@@ -2,6 +2,7 @@ package com.example.nouveaudesseinapp
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nouveaudesseinapp.components.CButton
-import com.example.nouveaudesseinapp.components.CTextField
+import com.example.nouveaudesseinapp.components.CTextfield
 import com.example.nouveaudesseinapp.components.DontHaveAccountRow
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaFontFamily
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaSansFontFamily
@@ -59,13 +61,14 @@ fun LoginScreen(
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp)
             ) {
 
                 // Logo
-                Image(painter = painterResource(id = R.drawable.logo_nouveau_dessein),
+                Image(painter = painterResource(id = R.drawable.logo_blanc),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(top = 1.dp)
@@ -106,14 +109,22 @@ fun LoginScreen(
 
 
 
-                CTextField(hint = "Adresse Email", value = "" )
+                CTextfield(hint = "Adresse Email", value = "" )
 
-                CTextField(hint = "mot de passe", value = "" )
+                CTextfield(hint = "mot de passe", value = "" )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                CButton(text = "Se Connecter")
+                CButton(
+                    onClick = {
+                        navController.navigate("login")
 
+                    },
+                    text = "Se Connecter",
+                    Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .width(20.dp))
                 DontHaveAccountRow(
                     onSignupTap = {
                         navController.navigate("signup")

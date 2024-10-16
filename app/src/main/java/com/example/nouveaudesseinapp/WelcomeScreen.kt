@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -60,7 +59,7 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Image(
-                painter = painterResource(id = R.drawable.logo_nouveau_dessein),
+                painter = painterResource(id = R.drawable.logo_blanc),
                 contentDescription = null,
                 modifier = Modifier
                     .width(320.dp)
@@ -88,15 +87,21 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.weight(1f))
 
 
-            CButton(text = "Connectez-vous ",
+            CButton(
                 onClick = {
-                    navController.navigate("login")
-                }
-            )
+                    navController.navigate("signin")
+
+                },
+                text = "Connectez-vous ",
+             Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .width(20.dp))
+
 
             DontHaveAccountRow(
                 onSignupTap = {
-                    navController.navigate("S'inscrire")
+                    navController.navigate("signup")
                 }
             )
 
