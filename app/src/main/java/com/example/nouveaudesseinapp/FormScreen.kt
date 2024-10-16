@@ -8,6 +8,7 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,8 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaFontFamily
-import com.example.nouveaudesseinapp.ui.theme.components.CButton
-import com.example.nouveaudesseinapp.ui.theme.components.CTextfield
+import com.example.nouveaudesseinapp.components.CButton
+import com.example.nouveaudesseinapp.components.CTextfield
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,15 +38,14 @@ fun FormScreen(
     modifier: Modifier = Modifier
 ) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val context = LocalContext.current // Correctly retrieve the current context.
+    val context = LocalContext.current
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        imageUri = uri // Set the selected image URI
+        imageUri = uri
 
-        // Decode the image based on Android version.
         uri?.let {
             if (Build.VERSION.SDK_INT < 28) {
                 bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
@@ -58,7 +58,7 @@ fun FormScreen(
 
     Box(modifier = modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.drawable.background),
+            painter = painterResource(id = R.drawable.bg),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
@@ -66,15 +66,10 @@ fun FormScreen(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_blanc),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.padding(top = 54.dp).height(100.dp).align(Alignment.Start).offset(x = (-20).dp)
-            )
+
 
             Text(
                 text = "Poster votre contribution",
@@ -103,52 +98,57 @@ fun FormScreen(
             CTextfield(hint = "Description ...", value="")
             CTextfield(hint = "Adresse ...", value="")
 
+            // Image upload row
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
             ) {
-                // Display selected image if available or a placeholder.
+                // Display selected image or placeholder
                 bitmap?.let {
                     Image(
                         bitmap = it.asImageBitmap(),
                         contentDescription = "Uploaded Image",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(50.dp).clip(RoundedCornerShape(8.dp))
+                        modifier = Modifier.size(80.dp).clip(RoundedCornerShape(12.dp))// Border for better visibility
                     )
                 } ?: run {
-                    // Placeholder for the uploaded image if none is selected.
-                    Image(
-                        painter = painterResource(id = R.drawable.upload), // Placeholder image resource.
-                        contentDescription = "Upload Placeholder",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(50.dp).clip(RoundedCornerShape(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(12.dp)).border(1.dp, Color.White)
+
                     )
                 }
 
-                // Button to upload an image.
-                CButton(onClick = { launcher.launch("image/*") }, text = "Upload Image")
+                CButton(onClick = { launcher.launch("image/*") }, text = "Upload Image",Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .width(20.dp))
             }
+
+            // Facture upload row
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween, // Adjust as needed
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
             ) {
-                // Placeholder for the uploaded image
-                Image(
-                    painter = painterResource(id = R.drawable.upload), // Replace with actual image resource or state variable
-                    contentDescription = "Uploaded Image",
-                    contentScale = ContentScale.Crop,
+                Box(
                     modifier = Modifier
-                        .size(50.dp)
-                        .clip(RoundedCornerShape(8.dp)) // Optional: Add rounded corners
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(12.dp)).border(1.dp, Color.White)
+
                 )
 
-                // Button to upload an image
-                CButton(onClick = { }, text = "Upload facture")
+                CButton(onClick = { /* Handle facture upload */ }, text = "Upload facture",Modifier
+                    .height(100.dp)
+                    .width(80.dp)
+)
             }
 
-            CButton(onClick = {}, text = "Envoyer")
+            CButton(onClick = {}, text = "Envoyer",Modifier
+                .fillMaxWidth()
+                .height(50.dp))
         }
     }
 }
