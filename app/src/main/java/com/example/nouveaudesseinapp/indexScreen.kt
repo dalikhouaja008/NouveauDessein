@@ -143,7 +143,7 @@ fun ButtonRow(onNavigate: (String) -> Unit) {
         Button(
             onClick = { onNavigate("posts") },
             modifier = buttonModifier,
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE)) // Couleur personnalisée
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C9A92)) // Couleur personnalisée
         ) {
             Text(text = "Posts", color = Color.White)
         }
@@ -151,7 +151,7 @@ fun ButtonRow(onNavigate: (String) -> Unit) {
         Button(
             onClick = { onNavigate("form") },
             modifier = buttonModifier,
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03DAC5)) // Couleur personnalisée
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C9A92)) // Couleur personnalisée
         ) {
             Text(text = "Form", color = Color.White)
         }
@@ -159,7 +159,7 @@ fun ButtonRow(onNavigate: (String) -> Unit) {
         Button(
             onClick = { onNavigate("profile") },
             modifier = buttonModifier,
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)) // Couleur personnalisée
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C9A92)) // Couleur personnalisée
         ) {
             Text(text = "Profil", color = Color.White)
         }
