@@ -38,9 +38,12 @@ fun CTextfield(
             .fillMaxWidth()
             .padding(bottom = 8.dp),
         colors = TextFieldDefaults.textFieldColors(
+            unfocusedTextColor = Color.White,
             containerColor = Color.Transparent,
             focusedIndicatorColor = Color(0xFFBEC2C2),
-            unfocusedIndicatorColor = Color(0xFFBEC2C2)
+            unfocusedIndicatorColor = Color(0xFFBEC2C2),
+           cursorColor = Color.White,
+            focusedLabelColor =  Color.White
         )
 
     )

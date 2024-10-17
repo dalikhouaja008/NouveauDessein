@@ -16,6 +16,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,12 +38,23 @@ import com.example.nouveaudesseinapp.components.DontHaveAccountRow
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaFontFamily
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaSansFontFamily
 import androidx.navigation.compose.rememberNavController
+import com.example.nouveaudesseinapp.Entities.UserData
+import com.example.nouveaudesseinapp.Repository.UserRepository
 
 
 @Composable
 fun SignupScreen(
     navController: NavHostController
 ) {
+    val userRepository = UserRepository()
+    var nom by remember { mutableStateOf("") }
+    var cin by remember { mutableStateOf("") }
+    var tel by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+
+
     Surface(
         color = Color(0xFF253334),
         modifier = Modifier.fillMaxSize()
@@ -48,7 +63,8 @@ fun SignupScreen(
 
         Box(modifier =  Modifier.fillMaxSize()){
             /// Background Image
-            Image(painter = painterResource(id = R.drawable.bg1),
+            Image(
+                painter = painterResource(id = R.drawable.bg1),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -122,16 +138,32 @@ fun SignupScreen(
                         .align(Alignment.Start)
                         .padding(bottom = 24.dp)
                 )
-                // Text Field
-                CTextfield(hint = "Nom ", value = "" )
-                CTextfield(hint = "CIN ", value = "" )
-                CTextfield(hint = "Numéro Téléphone ", value = "" )
-                CTextfield(hint = "Adresse Email", value = "" )
-                CTextfield(hint = "Mot de passe", value = "" )
+                // TextField
+                CTextfield(onValueChange = {nom =it},hint = "Nom ", value = nom )
+                CTextfield(onValueChange = {cin =it},hint = "CIN ", value = cin )
+                CTextfield(onValueChange = {tel =it},hint = "Numéro Téléphone ", value = tel)
+                CTextfield(onValueChange = {email =it},hint = "Adresse Email", value = email )
+                CTextfield(onValueChange = {password =it},hint = "Mot de passe", value = password )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                CButton(onClick = { }, text = "S'inscrire",Modifier
+                CButton(onClick = {
+                    var isloading=true
+                    val userData = UserData(nom, cin, tel, email, password)
+
+                    userRepository.createUser(userData) { isSuccess ->
+                        if (isSuccess) {
+                            navController.navigate("index")
+                        } else {
+                            println("Inscription échouée")
+                        }
+                    }
+
+                    println("test")
+                    nom=""
+                    cin=""
+                    navController.navigate("signin")
+                }, text = "S'inscrire", Modifier
                     .fillMaxWidth()
                     .height(50.dp)
                     .width(20.dp))

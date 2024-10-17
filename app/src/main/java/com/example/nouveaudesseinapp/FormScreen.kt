@@ -40,6 +40,8 @@ fun FormScreen(
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var description by remember { mutableStateOf("") }
+    var adresse by remember { mutableStateOf("") }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -95,8 +97,8 @@ fun FormScreen(
                 modifier = Modifier.align(Alignment.Start).padding(bottom = 24.dp)
             )
 
-            CTextfield(hint = "Description ...", value="")
-            CTextfield(hint = "Adresse ...", value="")
+            CTextfield(onValueChange = {description =it},hint = "Description ...", value=description)
+            CTextfield(onValueChange = {adresse =it},hint = "Adresse ...", value=adresse)
 
             // Image upload row
             Row(

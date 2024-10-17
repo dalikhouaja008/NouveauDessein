@@ -16,6 +16,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +43,8 @@ import com.example.nouveaudesseinapp.ui.theme.AlegreyaSansFontFamily
 fun LoginScreen(
     navController: NavHostController
 ) {
-
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -109,15 +114,17 @@ fun LoginScreen(
 
 
 
-                CTextfield(hint = "Adresse Email", value = "" )
+                CTextfield(onValueChange = {email =it},hint = "Adresse Email", value = email )
 
-                CTextfield(hint = "mot de passe", value = "" )
+                CTextfield(onValueChange = {password =it},hint = "mot de passe", value = password )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 CButton(
                     onClick = {
-                        navController.navigate("login")
+                        email=""
+                        password=""
+                        navController.navigate("index")
 
                     },
                     text = "Se Connecter",

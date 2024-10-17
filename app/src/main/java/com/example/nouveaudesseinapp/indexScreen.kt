@@ -35,11 +35,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.nouveaudesseinapp.ui.theme.NouveauDesseinAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    navController: NavHostController
+) {
     val currentScreen = remember { mutableStateOf("posts") }
     Scaffold (
         topBar = {
@@ -54,7 +58,7 @@ fun MainScreen() {
                     IconButton(onClick = {currentScreen.value = "profile"}) {
                         Icon(Icons.Filled.Info, contentDescription = "Info")
                     }
-                    MoreOption()
+                    MoreOption(navController)
                 }
             )
         },
@@ -65,7 +69,7 @@ fun MainScreen() {
         ) {
             ButtonRow { screen -> currentScreen.value = screen }
             when (currentScreen.value) {
-                "posts" -> PostList()
+                "posts" -> PostList(navController)
                 "form" -> FormScreen()
                 "profile" -> ProfileScreen()
                 // "about" -> AboutFragment()
@@ -74,7 +78,7 @@ fun MainScreen() {
     }
 }
 @Composable
-fun MoreOption() {
+fun MoreOption( navController: NavHostController) {
     var expanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
@@ -86,10 +90,18 @@ fun MoreOption() {
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
+
+            DropdownMenuItem(onClick = {
+                navController.navigate("ListParticipation")
+            }, text = { Text("Vos prochaines participations") })
+            DropdownMenuItem(onClick = {
+                //navController.navigate("ListParticipation")
+            }, text = { Text("Vos demandes de remboursement") })
             DropdownMenuItem(onClick = {
                 expanded = false
                 showDialog = true
-            }, text = { Text("Log Out") })
+
+            }, text = { Text("Se déconnecter") })
         }
     }
     if (showDialog) {
@@ -100,6 +112,7 @@ fun MoreOption() {
             confirmButton = {
                 Button(onClick = {
                     showDialog = false
+                    navController.navigate("signin")
                 }) {
                     Text("Yes")
                 }
@@ -156,6 +169,6 @@ fun ButtonRow(onNavigate: (String) -> Unit) {
 @Composable
 fun GreetingPreview() {
     NouveauDesseinAppTheme {
-        MainScreen()
+        MainScreen(rememberNavController())
     }
 }
