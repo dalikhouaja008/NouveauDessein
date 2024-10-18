@@ -9,9 +9,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.nouveaudesseinapp.Entities.Event
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.*
+import com.example.nouveaudesseinapp.viewmodel.UserViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,23 @@ class MainActivity : ComponentActivity() {
 
 
             }
+            MyApp()
+        }
+    }
+}
+
+@Composable
+fun MyApp() {
+    val navController = rememberNavController()
+    val userViewModel: UserViewModel = viewModel() // Initialize UserViewModel
+
+    NavHost(navController, startDestination = "signup") {
+        composable("signup") {
+            SignupScreen(navController, userViewModel) // Pass the UserViewModel
+        }
+        // Add other destinations here
+        composable("signin") {
+            WelcomeScreen(navController) // Ensure you have a SigninScreen
         }
     }
 }

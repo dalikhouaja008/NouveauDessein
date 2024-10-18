@@ -2,17 +2,7 @@ package com.example.nouveaudesseinapp
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,14 +28,18 @@ import com.example.nouveaudesseinapp.components.CTextfield
 import com.example.nouveaudesseinapp.components.DontHaveAccountRow
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaFontFamily
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaSansFontFamily
+import com.example.nouveaudesseinapp.viewmodel.UserViewModel
+import com.example.nouveaudesseinapp.network.User
 import androidx.navigation.compose.rememberNavController
 import com.example.nouveaudesseinapp.Entities.UserData
 import com.example.nouveaudesseinapp.Repository.UserRepository
+import com.example.nouveaudesseinapp.repository.UserRepository
 
 
 @Composable
 fun SignupScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    userViewModel: UserViewModel // Injecting the UserViewModel
 ) {
     val userRepository = UserRepository()
     var nom by remember { mutableStateOf("") }
@@ -83,7 +78,8 @@ fun SignupScreen(
             ) {
 
                 // Logo
-                Image(painter = painterResource(id = R.drawable.logo_blanc),
+                Image(
+                    painter = painterResource(id = R.drawable.logo_blanc),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(top = 54.dp)
@@ -147,22 +143,20 @@ fun SignupScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // Submit Button
                 CButton(onClick = {
-                    var isloading=true
-                    val userData = UserData(nom, cin, tel, email, password)
+                    // Creating a User object
+                    val user = User(name, cin, numTel, email, password)
 
-                    userRepository.createUser(userData) { isSuccess ->
-                        if (isSuccess) {
-                            navController.navigate("index")
+                    // Call ViewModel's createUser method
+                    userViewModel.createUser(user) { response ->
+                        if (response.isSuccessful) {
+                            // Navigate to another screen if user creation is successful
+                            navController.navigate("signin")
                         } else {
-                            println("Inscription échouée")
+                            // Handle errors, e.g., show a Toast
                         }
                     }
-
-                    println("test")
-                    nom=""
-                    cin=""
-                    navController.navigate("signin")
                 }, text = "S'inscrire", Modifier
                     .fillMaxWidth()
                     .height(50.dp)
