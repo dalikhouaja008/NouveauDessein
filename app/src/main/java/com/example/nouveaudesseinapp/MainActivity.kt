@@ -1,62 +1,38 @@
 package com.example.nouveaudesseinapp
 
-import android.os.Bundle
+import android.os.Bundle // Make sure to import Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.nouveaudesseinapp.ui.theme.NouveauDesseinAppTheme
+import androidx.navigation.compose.*
+import com.example.nouveaudesseinapp.viewmodel.UserViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        // Set content
         setContent {
-            val navController= rememberNavController()
-            NavHost(navController,startDestination = "splachScreen") {
-                composable("splachScreen"){WelcomeScreen(navController)}
-                composable("signup") {SignupScreen(navController)  }
-                composable("signin") { LoginScreen(navController) }
-            }
+            MyApp()
         }
     }
 }
 
+@Composable
+fun MyApp() {
+    val navController = rememberNavController()
+    val userViewModel: UserViewModel = viewModel() // Initialize UserViewModel
+
+    NavHost(navController, startDestination = "signup") {
+        composable("signup") {
+            SignupScreen(navController, userViewModel) // Pass the UserViewModel
+        }
+        // Add other destinations here
+        composable("signin") {
+            WelcomeScreen(navController) // Ensure you have a SigninScreen
+        }
+    }
+}

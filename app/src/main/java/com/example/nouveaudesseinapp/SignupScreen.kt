@@ -2,53 +2,45 @@ package com.example.nouveaudesseinapp
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.nouveaudesseinapp.components.CButton
 import com.example.nouveaudesseinapp.components.CTextfield
-import com.example.nouveaudesseinapp.components.DontHaveAccountRow
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaFontFamily
 import com.example.nouveaudesseinapp.ui.theme.AlegreyaSansFontFamily
-import androidx.navigation.compose.rememberNavController
-
+import com.example.nouveaudesseinapp.viewmodel.UserViewModel
+import com.example.nouveaudesseinapp.network.User
 
 @Composable
 fun SignupScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    userViewModel: UserViewModel // Injecting the UserViewModel
 ) {
+    var name by remember { mutableStateOf("") }
+    var cin by remember { mutableStateOf("") }
+    var numTel by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
     Surface(
         color = Color(0xFF253334),
         modifier = Modifier.fillMaxSize()
     ) {
-
-
-        Box(modifier =  Modifier.fillMaxSize()){
-            /// Background Image
-            Image(painter = painterResource(id = R.drawable.bg1),
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Background Image
+            Image(
+                painter = painterResource(id = R.drawable.bg1),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -56,8 +48,7 @@ fun SignupScreen(
                     .align(Alignment.BottomCenter)
             )
 
-            /// Content
-
+            // Content
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -65,9 +56,9 @@ fun SignupScreen(
                     .fillMaxSize()
                     .padding(horizontal = 24.dp)
             ) {
-
                 // Logo
-                Image(painter = painterResource(id = R.drawable.logo_blanc),
+                Image(
+                    painter = painterResource(id = R.drawable.logo_blanc),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(top = 54.dp)
@@ -75,33 +66,8 @@ fun SignupScreen(
                         .align(Alignment.Start)
                         .offset(x = (-20).dp)
                 )
-                Row(
-                    modifier = Modifier.padding(top=12.dp, bottom = 52.dp),
-                ){
 
-                    Text("Avez vous déjà un compte? ",
-                        style = TextStyle(
-                            fontSize = 15.sp,
-                            fontFamily = AlegreyaSansFontFamily,
-                            color = Color.White
-                        )
-                    )
-
-                    Text("Se connecter",
-                        style = TextStyle(
-                            fontSize = 15.sp,
-                            fontFamily = AlegreyaSansFontFamily,
-                            fontWeight = FontWeight(800),
-                            color = Color.White
-                        ),
-                        modifier = Modifier.clickable {
-                            navController.navigate("signin")
-                        }
-                    )
-
-
-                }
-
+                // Form
                 Text(text = "Créer un compte",
                     style = TextStyle(
                         fontSize = 28.sp,
@@ -112,42 +78,35 @@ fun SignupScreen(
                     modifier = Modifier.align(Alignment.Start)
                 )
 
-                Text("Créer un compte gratuitement et rejoignez-nous pour un nouveau dessein.",
-                    style = TextStyle(
-                        fontSize = 15.sp,
-                        fontFamily = AlegreyaSansFontFamily,
-                        color = Color(0xB2FFFFFF)
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(bottom = 24.dp)
-                )
-                // Text Field
-                CTextfield(hint = "Nom ", value = "" )
-                CTextfield(hint = "CIN ", value = "" )
-                CTextfield(hint = "Numéro Téléphone ", value = "" )
-                CTextfield(hint = "Adresse Email", value = "" )
-                CTextfield(hint = "Mot de passe", value = "" )
+                // Form fields
+                CTextfield(hint = "Nom ", value = name, onValueChange = { name = it })
+                CTextfield(hint = "CIN ", value = cin, onValueChange = { cin = it })
+                CTextfield(hint = "Numéro Téléphone ", value = numTel, onValueChange = { numTel = it })
+                CTextfield(hint = "Adresse Email", value = email, onValueChange = { email = it })
+                CTextfield(hint = "Mot de passe", value = password, onValueChange = { password = it })
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                CButton(onClick = { }, text = "S'inscrire",Modifier
+                // Submit Button
+                CButton(onClick = {
+                    // Creating a User object
+                    val user = User(name, cin, numTel, email, password)
+
+                    // Call ViewModel's createUser method
+                    userViewModel.createUser(user) { response ->
+                        if (response.isSuccessful) {
+                            // Navigate to another screen if user creation is successful
+                            navController.navigate("signin")
+                        } else {
+                            // Handle errors, e.g., show a Toast
+                        }
+                    }
+                }, text = "S'inscrire", Modifier
                     .fillMaxWidth()
                     .height(50.dp)
                     .width(20.dp))
-            }
-
 
             }
-
         }
-
     }
-
-
-@Preview(showBackground = true, widthDp = 320, heightDp = 640)
-@Composable
-fun SignupScreenPreview() {
-    val navController = rememberNavController()
-    SignupScreen(navController)
 }

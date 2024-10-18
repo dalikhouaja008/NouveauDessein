@@ -69,14 +69,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose.v280)
     implementation(libs.androidx.lifecycle.runtime.compose)
-    //communication
-    implementation (libs.ktor.client.core)
-    implementation (libs.ktor.client.cio)
-    implementation (libs.ktor.client.serialization)
-    implementation (libs.ktor.client.logging)
-    implementation (libs.kotlinx.serialization.json)
-    implementation (libs.ktor.client.serialization)
-    implementation (libs.ktor.client.logging)
-    implementation (libs.kotlinx.serialization.json.v150)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+
+
 
 }
